@@ -6,7 +6,6 @@ import logging from './start/logging.js';
 import routes from './start/routes.js';
 import config from './start/config.js';
 //calls
-
 logging();
 config();
 routes(app);

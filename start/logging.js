@@ -2,12 +2,11 @@
 import winston from 'winston';
 import 'winston-mongodb';
 import 'express-async-errors';
-//require('winston-mongodb');
-//require('express-async-errors');
+
 export default function () {
+  console.log('Entered');
   //uncaught exceptions
   process.on('uncaughtException', (err) => {
-    console.log('Uncaught exception', err);
     winston.error(err.message, err);
     process.exit(1);
   });
@@ -25,4 +24,5 @@ export default function () {
       db: 'mongodb+srv://job-task:PtiI0aeWia2SaDaY@cluster0.cws44.mongodb.net/?retryWrites=true&w=majority',
     })
   );
+  console.clear();
 }
