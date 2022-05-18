@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import upload from '../middlewares/upload.js';
+// import upload from '../middlewares/upload.js';
 import { Product, validateProduct } from '../models/Product.js';
 
 //View all Products
@@ -30,8 +30,9 @@ const getOneProduct = async (req, res) => {
 
 //Add Product
 const addProduct = async (req, res) => {
-  console.log(upload);
-  console.log(req.file);
+  // console.log(upload);
+  // console.log(req.file);
+
   const { error } = validateProduct(req.body);
   if (error)
     return res
@@ -56,7 +57,7 @@ const addProduct = async (req, res) => {
 //Update Product
 const updateProduct = async (req, res) => {
   const { name, discription } = req.body;
-
+  const postedBy = req.user._id;
   const id = req.params.id;
   let product = await Product.findById(id);
   if (!product)
@@ -70,14 +71,15 @@ const updateProduct = async (req, res) => {
       .status(StatusCodes.BAD_REQUEST)
       .send(error.details[0].message);
 
-  product = new Product({
-    name,
-    discription,
-  });
+  product.name = name;
+  product.discription = discription;
+  product.postedBy = postedBy;
   await product
     .save()
     .then((res) => {
-      res.status(StatusCodes.OK).send(product);
+      res
+        .status(StatusCodes.OK)
+        .send('Product Updated successfully');
     })
     .catch((error) => {
       res.status(StatusCodes.BAD_GATEWAY).send(error);
