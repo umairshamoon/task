@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import admin from '../middlewares/admin.js';
 import auth from '../middlewares/auth.js';
+import upload from '../middlewares/upload.js';
 
 import {
   getAllProducts,
@@ -13,7 +14,9 @@ import {
 const router = Router();
 
 router.route('/getAllProducts').get(auth, getAllProducts);
-router.route('/addProduct').post(auth, admin, addProduct);
+router
+  .route('/addProduct')
+  .post(auth, admin, upload.single('Image'), addProduct);
 router
   .route('/updateProduct/:id')
   .put(auth, admin, updateProduct);

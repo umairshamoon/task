@@ -1,0 +1,56 @@
+.login__container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f6f7f8;
+  color: #31333c;
+}
+
+.login__main_heading {
+  font-family: 'Comic Neue', cursive;
+  font-size: 2.5rem;
+  margin-bottom: 4rem;
+  letter-spacing: 1px;
+}
+
+.login__heading {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  margin-bottom: 1.2rem;
+  font-size: 1.75rem;
+}
+
+.login__input {
+  padding: 1.75rem 1rem;
+  margin: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  outline: none;
+  width: 40%;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
+.login__input:focus {
+  border-color: #397ff9;
+}
+
+.login__forgot_password {
+  color: #397ff9;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.login__submit {
+  width: 40%;
+  padding: 1.5rem;
+  background-color: #397ff9;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}

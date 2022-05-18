@@ -1,5 +1,6 @@
 import { User, validateUser } from '../models/User.js';
 import bcrypt from 'bcrypt';
+import { StatusCodes } from 'http-status-codes';
 
 //register user
 const registerUser = async (req, res) => {
@@ -32,15 +33,23 @@ const login = async (req, res) => {
   //finding user in database
   const user = await User.findOne({ email });
   //checking if user exists
-  if (!user) return res.status(400).send('User Does Not Exists');
+  if (!user)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send('User Does Not Exists');
 
   const result = await bcrypt.compare(password, user.password);
 
   if (!result)
-    return res.status(400).send('Password is incorrect');
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send('Password is incorrect');
   const token = user.generateAuthToken();
 
-  res.header('x-auth-token', token).status(200).send('Login');
+  res
+    .header('x-auth-token', token)
+    .status(StatusCodes.OK)
+    .send('Login');
 };
 
 //update profile

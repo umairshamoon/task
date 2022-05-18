@@ -18,6 +18,9 @@ const productSchema = new mongoose.Schema({
     maxlength: 255,
     required: true,
   },
+  img: {
+    type: Buffer,
+  },
   postedBy: {
     type: mongoose.Types.ObjectId,
     ref: 'User',

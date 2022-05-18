@@ -2,9 +2,13 @@
 import pkg from 'jsonwebtoken';
 const { verify } = pkg;
 import config from 'config';
+import { StatusCodes } from 'http-status-codes';
 export default function (req, res, next) {
   const token = req.header('x-auth-token');
-  if (!token) return res.status(401).send('access denied');
+  if (!token)
+    return res
+      .status(StatusCodes.FORBIDDEN)
+      .send('access denied');
   try {
     const decoded = verify(token, config.get('jwtPrivateKey'));
     req.user = decoded;

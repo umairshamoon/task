@@ -1,44 +1,42 @@
 import { StatusCodes } from 'http-status-codes';
+import upload from '../middlewares/upload.js';
 import { Product, validateProduct } from '../models/Product.js';
-import multer from 'multer';
-const upload = multer({ dest: 'uploads/' });
 
 //View all Products
 const getAllProducts = async (req, res) => {
-  await Product.find({})
-    .select('name discription postedBy -_id')
-    .then((products) => {
-      res.status(StatusCodes.OK).send(products);
-    })
-    .catch((error) => {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send('Product Does not Exists');
-    });
+  const products = await Product.find().select(
+    'name discription postedBy -_id'
+  );
+
+  if (!products.length)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send('Product Does not Exists');
+  res.status(StatusCodes.OK).send(products);
 };
 
 //View one product
 const getOneProduct = async (req, res) => {
   const id = req.params.id;
-  await Product.findById(id)
-    .select('name discription postedBy -_id')
-    .then((product) => {
-      res.status(StatusCodes.OK).send(product);
-    })
-    .catch((error) => {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send('Product Does not Exists');
-    });
+  const product = await Product.findById(id).select(
+    'name discription postedBy -_id'
+  );
+  if (!product)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send('Product Does not Exists');
+  res.status(StatusCodes.OK).send(product);
 };
+
 //Add Product
 const addProduct = async (req, res) => {
+  console.log(upload);
+  console.log(req.file);
   const { error } = validateProduct(req.body);
   if (error)
     return res
       .status(StatusCodes.BAD_REQUEST)
       .send(error.details[0].message);
-  console.log('id is ', req.user._id);
   req.body.postedBy = req.user._id;
   const { name, discription, postedBy } = req.body;
   let product = await Product.findOne({ name });
@@ -76,8 +74,14 @@ const updateProduct = async (req, res) => {
     name,
     discription,
   });
-  await product.save();
-  res.status(StatusCodes.OK).send(product);
+  await product
+    .save()
+    .then((res) => {
+      res.status(StatusCodes.OK).send(product);
+    })
+    .catch((error) => {
+      res.status(StatusCodes.BAD_GATEWAY).send(error);
+    });
 };
 
 //delete a product
