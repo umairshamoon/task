@@ -28,7 +28,9 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   //checking null values
   if (!email || !password)
-    res.status(400).send('Please Enter all values');
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send('Please Enter all values');
 
   //finding user in database
   const user = await User.findOne({ email });
@@ -47,9 +49,9 @@ const login = async (req, res) => {
   const token = user.generateAuthToken();
 
   res
-    .header('x-auth-token', token)
     .status(StatusCodes.OK)
-    .send('Login');
+    .header('Auth', token)
+    .json({ token: token });
 };
 
 //update profile
@@ -57,7 +59,9 @@ const updateProfile = async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    res.status.apply(400).send('Please enter all values');
+    res.status
+      .apply(StatusCodes.BAD_REQUEST)
+      .send('Please enter all values');
   }
   // get the user
 

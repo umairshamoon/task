@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
 // sass file
 import '../styles/login.css';
 
@@ -7,6 +8,8 @@ const Login = () => {
   // state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   //   handle submit
   const handleClick = async (e) => {
@@ -24,13 +27,14 @@ const Login = () => {
         }),
       }
     );
-    const data = await response.json();
-    console.log('Data is ', data);
-    console.log('Email: ', email, ' Password: ', password);
+
     if (!email || !password) {
       alert('Enter Email and Password');
-      return;
+      // return;
     }
+    const data = { email, password };
+    navigate('/dashboard');
+    console.log(data);
   };
 
   return (

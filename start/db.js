@@ -6,7 +6,6 @@ export default function () {
       'mongodb+srv://job-task:PtiI0aeWia2SaDaY@cluster0.cws44.mongodb.net/?retryWrites=true&w=majority'
     )
     .then(() => {
-      console.clear();
       console.log('connect successfully');
     })
     .catch((error) => {

@@ -1,10 +1,12 @@
+//import { path } from 'express/lib/application';
 import multer from 'multer';
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '../uploads');
-  },
-  filename: function (req, filename, cb) {
-    cb(null, file.originalname);
+  destination: './uploads/',
+  filename: function (req, file, cb) {
+    return cb(
+      null,
+      new Date().toISOString() + '-' + file.originalname
+    );
   },
 });
 

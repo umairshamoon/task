@@ -1,11 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
-// import upload from '../middlewares/upload.js';
+
 import { Product, validateProduct } from '../models/Product.js';
 
 //View all Products
 const getAllProducts = async (req, res) => {
   const products = await Product.find().select(
-    'name discription postedBy -_id'
+    'name discription image postedBy -_id'
   );
 
   if (!products.length)
@@ -19,7 +19,7 @@ const getAllProducts = async (req, res) => {
 const getOneProduct = async (req, res) => {
   const id = req.params.id;
   const product = await Product.findById(id).select(
-    'name discription postedBy -_id'
+    'name discription image postedBy -_id'
   );
   if (!product)
     return res
@@ -30,16 +30,20 @@ const getOneProduct = async (req, res) => {
 
 //Add Product
 const addProduct = async (req, res) => {
-  // console.log(upload);
-  // console.log(req.file);
+  const postedBy = req.user._id;
+  const image = req.file.path;
+  const { name, discription } = req.body;
 
-  const { error } = validateProduct(req.body);
+  const { error } = validateProduct({
+    name,
+    discription,
+    image,
+  });
   if (error)
     return res
       .status(StatusCodes.BAD_REQUEST)
       .send(error.details[0].message);
-  req.body.postedBy = req.user._id;
-  const { name, discription, postedBy } = req.body;
+
   let product = await Product.findOne({ name });
   if (product)
     return res
@@ -49,6 +53,7 @@ const addProduct = async (req, res) => {
     name,
     discription,
     postedBy,
+    image,
   });
   await product.save();
   res.status(StatusCodes.CREATED).send(product);
@@ -58,7 +63,9 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const { name, discription } = req.body;
   const postedBy = req.user._id;
+  const image = req.file.path;
   const id = req.params.id;
+
   let product = await Product.findById(id);
   if (!product)
     return res
@@ -74,6 +81,7 @@ const updateProduct = async (req, res) => {
   product.name = name;
   product.discription = discription;
   product.postedBy = postedBy;
+  product.image = image;
   await product
     .save()
     .then((res) => {

@@ -4,7 +4,7 @@ const { verify } = pkg;
 import config from 'config';
 import { StatusCodes } from 'http-status-codes';
 export default function (req, res, next) {
-  const token = req.header('x-auth-token');
+  const token = req.header('Auth');
   if (!token)
     return res
       .status(StatusCodes.FORBIDDEN)
