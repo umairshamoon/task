@@ -4,9 +4,9 @@ import { Product, validateProduct } from '../models/Product.js';
 
 //View all Products
 const getAllProducts = async (req, res) => {
-  const products = await Product.find().select(
-    'name discription image postedBy -_id'
-  );
+  const products = await Product.find()
+    .select('name discription image postedBy -_id')
+    .populate('postedBy', 'name email -_id');
 
   if (!products.length)
     return res
@@ -18,9 +18,9 @@ const getAllProducts = async (req, res) => {
 //View one product
 const getOneProduct = async (req, res) => {
   const id = req.params.id;
-  const product = await Product.findById(id).select(
-    'name discription image postedBy -_id'
-  );
+  const product = await Product.findById(id)
+    .select('name discription image postedBy -_id')
+    .populate('postedBy', 'name email -_id');
   if (!product)
     return res
       .status(StatusCodes.NOT_FOUND)
@@ -31,6 +31,7 @@ const getOneProduct = async (req, res) => {
 //Add Product
 const addProduct = async (req, res) => {
   const postedBy = req.user._id;
+
   const image = req.file.path;
   const { name, discription } = req.body;
 
