@@ -1,17 +1,8 @@
 import mongoose from 'mongoose';
+import winston from 'winston';
 
-export default function () {
-  mongoose
-    .connect(
-      'mongodb+srv://job-task:PtiI0aeWia2SaDaY@cluster0.cws44.mongodb.net/?retryWrites=true&w=majority'
-    )
-    .then(() => {
-      console.log('connect successfully');
-    })
-    .catch((error) => {
-      console.log(
-        'Enternal server Error. Server stoped with error code ',
-        error.code
-      );
-    });
+export default function (url) {
+  mongoose.connect(url).then(() => {
+    winston.info('connect successfully');
+  });
 }

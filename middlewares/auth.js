@@ -1,7 +1,6 @@
 //const jwt = require('jsonwebtoken');
 import pkg from 'jsonwebtoken';
 const { verify } = pkg;
-import config from 'config';
 import { StatusCodes } from 'http-status-codes';
 export default function (req, res, next) {
   const token = req.header('Auth');
@@ -10,12 +9,13 @@ export default function (req, res, next) {
       .status(StatusCodes.FORBIDDEN)
       .send('access denied');
   try {
-    const decoded = verify(token, config.get('jwtPrivateKey'));
+    const decoded = verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-
     next();
   } catch (error) {
     console.log(error);
-    return res.status(400).send('invalid token');
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send('invalid token');
   }
 }

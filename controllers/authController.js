@@ -8,19 +8,24 @@ const registerUser = async (req, res) => {
   //checking if data is correct or not
   const { error } = validateUser(req.body);
   if (error)
-    return res.status(400).send(error.details[0].message);
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send(error.details[0].message);
 
   //checking if user already exists
   const isUserRegistered = await User.findOne({ email });
   if (isUserRegistered)
-    return res.status(400).send('user already exists');
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send('user already exists');
 
   //registering new user
   const user = new User({ name, email, password, role });
+
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
-  res.status(200).send(user);
+  res.status(StatusCodes.CREATED).send(user);
 };
 
 //login
@@ -51,33 +56,41 @@ const login = async (req, res) => {
   res
     .status(StatusCodes.OK)
     .header('Auth', token)
-    .json({ token: token });
+    .send('Login successsfully');
 };
 
 //update profile
 const updateProfile = async (req, res) => {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    res.status
-      .apply(StatusCodes.BAD_REQUEST)
+  const { error } = validateUser(req.body);
+  if (error) {
+    return res.status
+      .status(StatusCodes.BAD_REQUEST)
       .send('Please enter all values');
   }
-  // get the user
+
+  const id = req.params.id;
+  let user = await User.findById(id);
+  if (!user)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .send('User does not exists');
 
   // setting new values
-  const user = new User({
+  user = new User({
     name,
     email,
     password,
   });
+
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
 
   // new token
-  const token = user.createJWT();
+  user.createJWT();
 
-  res.status(400).send('Profile Updated');
+  res.status(StatusCodes.CREATED).send('Profile Updated');
 };
 export { login, registerUser, updateProfile };

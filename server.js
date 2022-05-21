@@ -1,15 +1,18 @@
 import express from 'express';
 const app = express();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 import db from './start/db.js';
+import logger from './start/logger.js';
 
 import routes from './start/routes.js';
-import config from './start/config.js';
+
 //calls
-
-config();
+logger;
 routes(app);
-db();
+db(process.env.DB_URL);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 app.listen(port, () => console.log('listening at port ', port));
