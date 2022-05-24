@@ -35,13 +35,11 @@ function validateProduct({ name, discription, image }) {
   const schema = {
     name: Joi.string().min(3).max(20).required(),
     discription: Joi.string().min(20).max(255).required(),
-    image: Joi.string().required(),
   };
   return Joi.validate(
     {
       name,
       discription,
-      image,
     },
     schema
   );

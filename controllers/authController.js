@@ -7,10 +7,12 @@ const registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;
   //checking if data is correct or not
   const { error } = validateUser(req.body);
-  if (error)
+  if (error) {
+    console.log(error.details[0].message);
     return res
       .status(StatusCodes.BAD_REQUEST)
       .send(error.details[0].message);
+  }
 
   //checking if user already exists
   const isUserRegistered = await User.findOne({ email });
@@ -62,35 +64,38 @@ const login = async (req, res) => {
 //update profile
 const updateProfile = async (req, res) => {
   const { name, email, password } = req.body;
+  req.body.role = req.user.role;
+  const id = req.params.id;
 
   const { error } = validateUser(req.body);
   if (error) {
-    return res.status
+    return res
       .status(StatusCodes.BAD_REQUEST)
-      .send('Please enter all values');
+      .send(error.details[0].message);
   }
-
-  const id = req.params.id;
   let user = await User.findById(id);
   if (!user)
     return res
       .status(StatusCodes.NOT_FOUND)
-      .send('User does not exists');
+      .send('User does not exist');
 
   // setting new values
   user = new User({
     name,
     email,
     password,
+    role: req.body.role,
   });
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
-  await user.save();
 
   // new token
-  user.createJWT();
-
-  res.status(StatusCodes.CREATED).send('Profile Updated');
+  const token = user.generateAuthToken();
+  user.save();
+  res
+    .status(StatusCodes.CREATED)
+    .header('Auth', token)
+    .send('Profile Updated');
 };
 export { login, registerUser, updateProfile };

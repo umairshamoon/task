@@ -10,9 +10,9 @@ import {
 
 const router = Router();
 router.route('/login').post(login);
-router.route('/registerUser').post([auth, admin], registerUser);
+router.route('/register').post(registerUser);
 router
-  .route('/updateProfile')
-  .post([auth || admin], updateProfile);
+  .route('/update-profile/:id')
+  .put([auth || admin], updateProfile);
 
 export default router;

@@ -13,24 +13,24 @@ import {
 const router = Router();
 
 //get all products
-router.route('/getAllProducts').get(auth, getAllProducts);
+router.route('/get-all-products').get(auth, getAllProducts);
 
 //add product
 router
-  .route('/addProduct')
+  .route('/add-product')
   .post(auth, admin, upload.single('image'), addProduct);
 
 //update product
 router
-  .route('/updateProduct/:id')
+  .route('/update-product/:id')
   .put(auth, admin, upload.single('image'), updateProduct);
 
 //delete a product
 router
-  .route('/deleteProduct/:id')
+  .route('/delete-product/:id')
   .delete(auth, admin, deleteProduct);
 
 //get one product
-router.route('/getOneProduct/:id').get(auth, getOneProduct);
+router.route('/get-one-product/:id').get(auth, getOneProduct);
 
 export default router;

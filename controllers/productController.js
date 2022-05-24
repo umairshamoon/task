@@ -5,8 +5,8 @@ import { Product, validateProduct } from '../models/Product.js';
 //View all Products
 const getAllProducts = async (req, res) => {
   const products = await Product.find()
-    .select('name discription image postedBy -_id')
-    .populate('postedBy', 'name email -_id');
+    .select('name discription image postedBy')
+    .populate({path:'postedBy', 'name email'});
 
   if (!products.length)
     return res
@@ -31,14 +31,19 @@ const getOneProduct = async (req, res) => {
 //Add Product
 const addProduct = async (req, res) => {
   const postedBy = req.user._id;
+  console.log(req.file);
+  if (!req.file)
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send('Image is required');
 
   const image = req.file.path;
+  console.log(req.body);
   const { name, discription } = req.body;
 
   const { error } = validateProduct({
     name,
     discription,
-    image,
   });
   if (error)
     return res
@@ -98,24 +103,18 @@ const updateProduct = async (req, res) => {
 //delete a product
 const deleteProduct = async (req, res) => {
   const id = req.params.id;
-  const product = await Product.findByIdAndDelete(id)
+  await Product.findByIdAndDelete(id)
     .then((product) => {
       res
         .status(StatusCodes.OK)
-        .send('Product deleted Successfully');
+        .send(`Product deleted Successfully ${product}`);
     })
     .catch((error) => {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .send('Prduct Does not Exists');
+        .send(`Prduct Does not Exists ${error}`);
     });
-  // if (!product)
-  //   return res
-  //     .status(StatusCodes.NOT_FOUND)
-  //     .send('Prduct Does not Exists');
-  // res
-  //   .status(StatusCodes.OK)
-  //   .send('Product deleted Successfully');
+  
 };
 
 export {

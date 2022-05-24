@@ -13,7 +13,6 @@ export default function (req, res, next) {
     req.user = decoded;
     next();
   } catch (error) {
-    console.log(error);
     return res
       .status(StatusCodes.BAD_REQUEST)
       .send('invalid token');
