@@ -6,7 +6,7 @@ import { Product, validateProduct } from '../models/Product.js';
 const getAllProducts = async (req, res) => {
   const products = await Product.find()
     .select('name discription image postedBy')
-    .populate({path:'postedBy', 'name email'});
+    .populate('postedBy', 'name email');
 
   if (!products.length)
     return res
@@ -114,7 +114,6 @@ const deleteProduct = async (req, res) => {
         .status(StatusCodes.NOT_FOUND)
         .send(`Prduct Does not Exists ${error}`);
     });
-  
 };
 
 export {
