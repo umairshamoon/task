@@ -11,7 +11,7 @@ import productsRoutes from '../routes/productRoutes.js';
 import error from '../middlewares/error.js';
 
 export default function (app) {
-  app.use(cors());
+  // app.use(cors());
   app.use(express.json());
 
   app.use('/api/auth', authRoutes);

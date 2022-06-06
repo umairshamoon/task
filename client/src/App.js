@@ -1,27 +1,44 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
-import Login from './components/Login';
-import AdminDashboard from './components/AdminDashboard';
-import NotFound from './components/NotFound';
+import { useState } from "react";
+import AdminDashboard from "./components/Admin/AdminDashboard";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
+
 function App() {
+  const login = async (data) => {
+    try {
+      const resp = await axios.post('/api/auth/login', data);
+      alert(resp.data.msg);
+    } catch (err) {
+      alert(err.response.data.msg);
+      console.log(err.response.data.msg);
+    }
+  };
+
+  const signup = async (data) => {
+    try {
+      const res = await axios.post('/api/auth/register', data);
+      alert(res.data.msg);
+    } catch (err) {
+      alert(err.response.data.msg);
+      console.log(err.response.data.msg);
+    }
+  };
+
+
   return (
     <div>
-      <Router>
+      <BrowserRouter>
         <Routes>
-          <Route path='/' exact element={<Login />} />
-          <Route
-            path='/dashboard'
-            element={<AdminDashboard />}
-          />
-
-          <Route path='*' element={<NotFound />} />
+          <Route exact path="" element={<Login login={login} />} />
+          <Route exact path="/signup" element={<Signup signup={signup} />} />
+          <Route exact path='/admin' element={<AdminDashboard />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;

@@ -4,14 +4,17 @@ import { StatusCodes } from 'http-status-codes';
 
 //register user
 const registerUser = async (req, res) => {
+  console.log(req.body);
+
   const { name, email, password, role } = req.body;
+
   //checking if data is correct or not
   const { error } = validateUser(req.body);
   if (error) {
     console.log(error.details[0].message);
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .send(error.details[0].message);
+      .json({ msg: error.details[0].message });
   }
 
   //checking if user already exists
@@ -19,7 +22,7 @@ const registerUser = async (req, res) => {
   if (isUserRegistered)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .send('user already exists');
+      .json({ msg: 'user already exists' });
 
   //registering new user
   const user = new User({ name, email, password, role });
@@ -27,17 +30,18 @@ const registerUser = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
-  res.status(StatusCodes.CREATED).send(user);
+  res.status(StatusCodes.CREATED).json({ msg: 'Account created successfully' });
 };
 
 //login
 const login = async (req, res) => {
+
   const { email, password } = req.body;
   //checking null values
   if (!email || !password)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .send('Please Enter all values');
+      .json({ msg: 'Please Enter all values' });
 
   //finding user in database
   const user = await User.findOne({ email });
@@ -45,20 +49,20 @@ const login = async (req, res) => {
   if (!user)
     return res
       .status(StatusCodes.NOT_FOUND)
-      .send('User Does Not Exists');
+      .json({ msg: 'User Does Not Exists' });
 
   const result = await bcrypt.compare(password, user.password);
 
   if (!result)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .send('Password is incorrect');
+      .json({ msg: 'Password is incorrect' });
   const token = user.generateAuthToken();
 
   res
     .status(StatusCodes.OK)
     .header('Auth', token)
-    .send('Login successsfully');
+    .json({ msg: 'Login successsfully' });
 };
 
 //update profile

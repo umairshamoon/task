@@ -13,7 +13,7 @@ import {
 const router = Router();
 
 //get all products
-router.route('/get-all-products').get(auth, getAllProducts);
+router.route('/get-all-products').get(getAllProducts);//auth,
 
 //add product
 router

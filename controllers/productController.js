@@ -11,8 +11,8 @@ const getAllProducts = async (req, res) => {
   if (!products.length)
     return res
       .status(StatusCodes.NOT_FOUND)
-      .send('Product Does not Exists');
-  res.status(StatusCodes.OK).send(products);
+      .json({ msg: 'Product Does not Exists' });
+  res.status(StatusCodes.OK).json(products);
 };
 
 //View one product

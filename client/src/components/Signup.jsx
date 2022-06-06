@@ -2,19 +2,31 @@ import '../styles/login.css';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Login = ({ login }) => {
+const Signup = ({ signup }) => {
   const [details, setDetails] = useState({
+    name: '',
     email: '',
     password: '',
   });
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(details);
-    login(details);
+    signup(details);
   };
   return (
-    <div id='loginform' style={{ margin: '100px auto' }}>
-      <h2 id='headerTitle'>Login</h2>
+    <div id='loginform'>
+      <h2 id='headerTitle'>Signup</h2>
+      <div className='row'>
+        <label>Name</label>
+        <input
+          type='name-'
+          name='name'
+          id='name'
+          value={details.name}
+          onChange={(e) =>
+            setDetails({ ...details, name: e.target.value })
+          }
+        />
+      </div>
 
       {/* email */}
       <div className='row'>
@@ -46,30 +58,32 @@ const Login = ({ login }) => {
           }
         />
       </div>
+
       {/* button */}
-      <div id='button' className='row'>
-        <button
-          onClick={handleSubmit}
-          style={{
-            display: 'flex',
-            allignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          Login
-        </button>
-      </div>
       <div
+        id='button'
+        className='row'
         style={{
           display: 'flex',
           allignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <p>Don't have account?</p>
-        <Link to='/signup'>Signup here</Link>
+        <button onClick={handleSubmit}>Signup</button>
+        <div
+          style={{
+            display: 'flex',
+            allignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '2rem',
+          }}
+        >
+          <p>Already have account </p>
+
+          <Link to='/'>Signin</Link>
+        </div>
       </div>
     </div>
   );
 };
-export default Login;
+export default Signup;
