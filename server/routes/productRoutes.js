@@ -1,19 +1,19 @@
-import { Router } from 'express';
-import admin from '../middlewares/admin.js';
-import auth from '../middlewares/auth.js';
-import upload from '../middlewares/upload.js';
-import {
+const { Router } = require('express');
+const admin = require('../middlewares/admin');
+const auth = require('../middlewares/auth');
+const { upload } = require('../middlewares/upload');
+const {
   getAllProducts,
   addProduct,
   updateProduct,
   deleteProduct,
   getOneProduct,
-} from '../controllers/productController.js';
+} = require('../controllers/productController');
 
 const router = Router();
 
 //get all products
-router.route('/get-all-products').get(getAllProducts);//auth,
+router.route('/get-all-products').get(getAllProducts); //auth,
 
 //add product
 router
@@ -33,4 +33,4 @@ router
 //get one product
 router.route('/get-one-product/:id').get(auth, getOneProduct);
 
-export default router;
+module.exports = router;

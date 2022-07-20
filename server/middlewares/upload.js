@@ -1,5 +1,5 @@
 //import { path } from 'express/lib/application';
-import multer from 'multer';
+const multer = require('multer');
 const storage = multer.diskStorage({
   destination: './uploads/',
   filename: function (req, file, cb) {
@@ -10,6 +10,4 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
-
-export default upload;
+exports.upload = multer({ storage: storage });

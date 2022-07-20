@@ -13,7 +13,6 @@ const AdminDashboard = () => {
       );
       setProducts(...products, data);
     } catch (err) {
-      // alert(err .response.data.msg);
       console.log(err);
     }
   };

@@ -1,8 +1,8 @@
 //job-task
 //PtiI0aeWia2SaDaY
 
-import mongoose from 'mongoose';
-import Joi from 'joi';
+const mongoose = require('mongoose');
+const Joi = require('joi');
 
 //product Schema
 const productSchema = new mongoose.Schema({
@@ -29,9 +29,13 @@ const productSchema = new mongoose.Schema({
 });
 
 //product model
-const Product = mongoose.model('Product', productSchema);
+exports.Product = mongoose.model('Product', productSchema);
 //Joi validate Method
-function validateProduct({ name, discription, image }) {
+exports.validateProduct = function ({
+  name,
+  discription,
+  image,
+}) {
   const schema = {
     name: Joi.string().min(3).max(20).required(),
     discription: Joi.string().min(20).max(255).required(),
@@ -43,6 +47,4 @@ function validateProduct({ name, discription, image }) {
     },
     schema
   );
-}
-
-export { Product, validateProduct };
+};

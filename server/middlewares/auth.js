@@ -1,8 +1,8 @@
 //const jwt = require('jsonwebtoken');
-import pkg from 'jsonwebtoken';
-const { verify } = pkg;
-import { StatusCodes } from 'http-status-codes';
-export default function (req, res, next) {
+
+const { verify } = require('jsonwebtoken');
+const { StatusCodes } = require('http-status-codes');
+module.exports = function (req, res, next) {
   const token = req.header('Auth');
   if (!token)
     return res
@@ -17,4 +17,4 @@ export default function (req, res, next) {
       .status(StatusCodes.BAD_REQUEST)
       .send('invalid token');
   }
-}
+};

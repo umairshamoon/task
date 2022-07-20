@@ -1,9 +1,12 @@
-import { StatusCodes } from 'http-status-codes';
+const { StatusCodes } = require('http-status-codes');
 
-import { Product, validateProduct } from '../models/Product.js';
+const {
+  Product,
+  validateProduct,
+} = require('../models/Product.js');
 
 //View all Products
-const getAllProducts = async (req, res) => {
+exports.getAllProducts = async (req, res) => {
   const products = await Product.find()
     .select('name discription image postedBy')
     .populate('postedBy', 'name email');
@@ -16,7 +19,7 @@ const getAllProducts = async (req, res) => {
 };
 
 //View one product
-const getOneProduct = async (req, res) => {
+exports.getOneProduct = async (req, res) => {
   const id = req.params.id;
   const product = await Product.findById(id)
     .select('name discription image postedBy -_id')
@@ -29,7 +32,7 @@ const getOneProduct = async (req, res) => {
 };
 
 //Add Product
-const addProduct = async (req, res) => {
+exports.addProduct = async (req, res) => {
   const postedBy = req.user._id;
   console.log(req.file);
   if (!req.file)
@@ -66,7 +69,7 @@ const addProduct = async (req, res) => {
 };
 
 //Update Product
-const updateProduct = async (req, res) => {
+exports.updateProduct = async (req, res) => {
   const { name, discription } = req.body;
   const postedBy = req.user._id;
   const image = req.file.path;
@@ -101,7 +104,7 @@ const updateProduct = async (req, res) => {
 };
 
 //delete a product
-const deleteProduct = async (req, res) => {
+exports.deleteProduct = async (req, res) => {
   const id = req.params.id;
   await Product.findByIdAndDelete(id)
     .then((product) => {
@@ -114,12 +117,4 @@ const deleteProduct = async (req, res) => {
         .status(StatusCodes.NOT_FOUND)
         .send(`Prduct Does not Exists ${error}`);
     });
-};
-
-export {
-  getAllProducts,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-  getOneProduct,
 };

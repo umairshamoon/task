@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import Joi from 'joi';
-import jwt from 'jsonwebtoken';
+const mongoose = require('mongoose');
+const Joi = require('joi');
+const jwt = require('jsonwebtoken');
 
 //user Schema
 const userSchema = new mongoose.Schema({
@@ -39,7 +39,7 @@ userSchema.methods.generateAuthToken = function () {
 };
 
 //joi validate method
-function validateUser(user) {
+exports.validateUser = function (user) {
   const schema = {
     name: Joi.string().min(3).max(50).required(),
     email: Joi.string().min(5).max(255).required().email(),
@@ -47,9 +47,7 @@ function validateUser(user) {
     role: Joi.string().valid('Admin', 'Customer'),
   };
   return Joi.validate(user, schema);
-}
+};
 
 //user Model
-const User = mongoose.model('User', userSchema);
-
-export { User, validateUser };
+exports.User = mongoose.model('User', userSchema);

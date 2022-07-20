@@ -1,9 +1,9 @@
-import { User, validateUser } from '../models/User.js';
-import bcrypt from 'bcrypt';
-import { StatusCodes } from 'http-status-codes';
+const { User, validateUser } = require('../models/User.js');
+const bcrypt = require('bcrypt');
+const { StatusCodes } = require('http-status-codes');
 
 //register user
-const registerUser = async (req, res) => {
+exports.registerUser = async (req, res) => {
   console.log(req.body);
 
   const { name, email, password, role } = req.body;
@@ -30,12 +30,13 @@ const registerUser = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
-  res.status(StatusCodes.CREATED).json({ msg: 'Account created successfully' });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ msg: 'Account created successfully' });
 };
 
 //login
-const login = async (req, res) => {
-
+exports.login = async (req, res) => {
   const { email, password } = req.body;
   //checking null values
   if (!email || !password)
@@ -66,7 +67,7 @@ const login = async (req, res) => {
 };
 
 //update profile
-const updateProfile = async (req, res) => {
+exports.updateProfile = async (req, res) => {
   const { name, email, password } = req.body;
   req.body.role = req.user.role;
   const id = req.params.id;
@@ -102,4 +103,3 @@ const updateProfile = async (req, res) => {
     .header('Auth', token)
     .send('Profile Updated');
 };
-export { login, registerUser, updateProfile };

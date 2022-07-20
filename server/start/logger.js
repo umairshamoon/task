@@ -1,9 +1,8 @@
-import { format, createLogger, transports } from 'winston';
+const { format, createLogger, transports } = require('winston');
 const { timestamp, combine, json, errors } = format;
-import 'express-async-errors';
-import { Logger } from 'concurrently';
+require('express-async-errors');
 
-const logger = createLogger({
+exports.logger = createLogger({
   format: combine(timestamp(), errors({ stack: true }), json()),
   transports: [
     new transports.File({
@@ -13,4 +12,3 @@ const logger = createLogger({
     }),
   ],
 });
-export default logger;
